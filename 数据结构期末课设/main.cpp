@@ -21,7 +21,7 @@ public:
 	ull hash(string& s) {
 		ull hashint = 1;
 		for (auto& x : s) {
-			hashint = (x - '0')+hashint*hashP;
+			hashint = (x - 'a')+hashint*hashP;
 		}
 		return hashint;
 	}
@@ -30,8 +30,9 @@ public:
 		
 	}
 	ull getsub(int l, int r,ull* hasha) { return hasha[r] - hasha[l - 1] * bin[r - l + 1]; }
-private:
 	ull* bin;
+
+private:
 	string* array;
 	const ull hashP = 131;
 	int maxsize = 100008;
@@ -49,23 +50,27 @@ int main() {
 
 	int m;
 	cin >> m;
-	for (int a = 1; a <= m; ++a) {
+	for (int ac = 1; ac <= m; ++ac) {
 		ull hashP = 131;
 		string s;
 		cin >> s;
 		ull *hasharray=new ull[s.length()];
 		ull* hasharrayL = new ull[s.length()];
 		ull* hasharrayS = new ull[s.length()];
-		hasharray[0] = s[0] - '0';
+		hasharray[0] = s[0] - 'a';
 		hasharrayL[0] = hasharray[0] * hashP;
 		hasharrayS[0] = hasharray[0] / hashP;
-		for (int a = 1; a < s.length(); ++a) {
-			hasharray[a] = hasharray[a - 1] * hashP + s[a] - '0';
+		int len = s.length();
+		for (int a = 1; a <len; ++a) {
+			hasharray[a] = hasharray[a - 1] * hashP + s[a] - 'a';
 			hasharrayL[a] = hasharray[a] * hashP;
 			hasharrayS[a] = hasharray[a] / hashP;
 		}
-		for (int a = 0; a < s.length(); ++a) {
-			for(int a)
+		
+		for (int a = 0; a < len; ++a) {
+			for (int chr = 'a'; chr <= 'z'; ++chr) {
+				ull hashi=hasharray[len-1]+(chr-s[a])*hashstr.bin[]
+			}
 		}
 	}
 	
