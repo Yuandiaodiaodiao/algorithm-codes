@@ -5,37 +5,44 @@ using ull=unsigned long long;
 class HashList {
 	//¹þÏ£±í
 public:
-	HashList(int maxs=100008){
+	HashList(int maxs = 100007) {
 		maxsize = maxs;
 		array = new string[maxs];
 		bin = new ull[maxs];
 		bin[0] = 1;
 		for (int a = 1; a < maxs; ++a) {
-			bin[a] = bin[a - 1]*hashP;
+			bin[a] = bin[a - 1] * hashP;
 		}
 	}
+	~HashList() {
+		delete[]bin;
+		delete[]array;
+	}
 	void add(string s) {
-		if (array[hash(s) % maxsize].length() > 0)cerr << "hash crashed" << endl;
+		if (!array[hash(s) % maxsize].empty())cerr << "hash crashed" << endl;
 		array[hash(s) % maxsize] = s;
+		cout << "¹þÏ£Öµ" << hash(s) << endl;
 	}
 	ull hash(string& s) {
-		ull hashint = 1;
+		ull hashint = 0;
 		for (auto& x : s) {
-			hashint = (x - 'a')+hashint*hashP;
+			hashint = (x - 'a'+1) + hashint * hashP;
 		}
 		return hashint;
 	}
-	bool find(ull hashint) {
-		return (array[hashint % maxsize].length() != 0);
-		
+	string& find(ull hashint) {
+		return array[hashint % maxsize];
 	}
-	ull getsub(int l, int r,ull* hasha) { return hasha[r] - hasha[l - 1] * bin[r - l + 1]; }
-	ull* bin;
-
+	ull getsub(int l, int r, ull * hasha) {
+		if (r < l)return 0;
+		return hasha[r] - (l - 1 >= 0 ? hasha[l - 1] : 0) * bin[r - l + 1]; }
+	ull * bin;
+	int maxsize = 100007;
+	const ull hashP = 131;
 private:
 	string* array;
-	const ull hashP = 131;
-	int maxsize = 100008;
+
+
 };
 int hashDone[100008];
 int main() {
@@ -51,27 +58,57 @@ int main() {
 	int m;
 	cin >> m;
 	for (int ac = 1; ac <= m; ++ac) {
-		ull hashP = 131;
+		ull hashP = hashstr.hashP;
 		string s;
 		cin >> s;
-		ull *hasharray=new ull[s.length()];
-		ull* hasharrayL = new ull[s.length()];
-		ull* hasharrayS = new ull[s.length()];
-		hasharray[0] = s[0] - 'a';
-		hasharrayL[0] = hasharray[0] * hashP;
-		hasharrayS[0] = hasharray[0] / hashP;
+		ull* hasharray = new ull[s.length()];
+		hasharray[0] = s[0] - 'a'+1;
 		int len = s.length();
-		for (int a = 1; a <len; ++a) {
-			hasharray[a] = hasharray[a - 1] * hashP + s[a] - 'a';
-			hasharrayL[a] = hasharray[a] * hashP;
-			hasharrayS[a] = hasharray[a] / hashP;
+		for (int a = 1; a < len; ++a) {
+			hasharray[a] = hasharray[a - 1] * hashP + s[a] - 'a'+1;
 		}
-		
-		for (int a = 0; a < len; ++a) {
+
+		for (int a = 0; a <=len; ++a) {
 			for (int chr = 'a'; chr <= 'z'; ++chr) {
-				ull hashi=hasharray[len-1]+(chr-s[a])*hashstr.bin[]
+				//change
+				if(a<len)
+				{
+					ull hashi = hasharray[len - 1] + (chr - s[a]) * hashstr.bin[len - 1 - a];
+					if (hashDone[hashi % hashstr.maxsize] != ac) {
+						string& ans = hashstr.find(hashi);
+						if (!ans.empty()) {
+							cout << ans << endl;
+						}
+						hashDone[hashi % hashstr.maxsize] = ac;
+					}
+
+				}
+				//insert
+				{
+					ull hashi = ((a - 1 >= 0) ? hasharray[a - 1] * hashstr.bin[len  - (a - 1) ] : 0) + (chr - 'a'+1) * hashstr.bin[len - a] + hashstr.getsub(a, len - 1, hasharray);
+					if (hashDone[hashi % hashstr.maxsize] != ac) {
+						string& ans = hashstr.find(hashi);
+						if (!ans.empty()) {
+							cout << ans << endl;
+						}
+						hashDone[hashi % hashstr.maxsize] = ac;
+					}
+				}
+			}
+			
+			//delete
+			{
+				ull hashi = ((a - 1 >= 0) ? hasharray[a - 1] * hashstr.bin[len - 1 - (a - 1) - 1] : 0) + hashstr.getsub(a + 1, len - 1, hasharray);
+				if (hashDone[hashi % hashstr.maxsize] != ac) {
+					string& ans = hashstr.find(hashi);
+					if (!ans.empty()) {
+						cout << ans << endl;
+					}
+					hashDone[hashi % hashstr.maxsize] = ac;
+				}
 			}
 		}
+		delete[]hasharray;
 	}
-	
+
 }
