@@ -9,8 +9,10 @@ int main() {
 	DictFind dict;
 	SocketServer sock;
 	int uid = 0;
-	SOCKET id=sock.accepts();
+	
 	while (true) {
+		SOCKET id = sock.accepts();
+		//cout << "connect" << endl;
 		stringstream ss(sock.receives(id));
 		string s;
 		ss >> s;
@@ -27,7 +29,9 @@ int main() {
 			}
 			delete v;
 			sock.sends(id, temp);
+			cout << temp << endl;
 		}
+		sock.closes(id);
 	}
 	return 0;
 }

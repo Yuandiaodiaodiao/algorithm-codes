@@ -25,7 +25,7 @@ public:
 		//°ó¶¨IPºÍ¶Ë¿Ú  
 		sockaddr_in sin;
 		sin.sin_family = AF_INET;
-		sin.sin_port = htons(12345);
+		sin.sin_port = htons(13333);
 		sin.sin_addr.S_un.S_addr = INADDR_ANY;
 		if (bind(slisten, (LPSOCKADDR)& sin, sizeof(sin)) == SOCKET_ERROR)
 		{
@@ -53,7 +53,7 @@ public:
 		{
 			throw("accept error !");
 		}
-		cout<<"from ip"<<inet_ntoa(remoteAddr.sin_addr)<<endl;
+		//cout<<"from ip"<<inet_ntoa(remoteAddr.sin_addr)<<endl;
 
 		return sClient;
 	}
