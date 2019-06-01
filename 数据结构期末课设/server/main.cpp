@@ -12,7 +12,7 @@ int main() {
 	
 	while (true) {
 		SOCKET id = sock.accepts();
-		//cout << "connect" << endl;
+		//cout << "connect" << endl;d
 		stringstream ss(sock.receives(id));
 		string s;
 		ss >> s;
@@ -22,10 +22,10 @@ int main() {
 		}
 		else {
 			ss >> s;
-			auto v = dict.solve(++uid, s);
+			vector<string*>* v = dict.solve(++uid, s);
 			string temp="\n";
-			for (auto& x : *v) {
-				temp += x+"\n";
+			for (auto x : *v) {
+				temp += *x+"\n";
 			}
 			delete v;
 			sock.sends(id, temp);
